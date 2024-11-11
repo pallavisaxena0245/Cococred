@@ -2,11 +2,11 @@
 
 # User inputs
 REPO_URL="https://github.com/pallavisaxena0245/Cococred.git"    # Replace with your repo URL
-BRANCH_NAME="main"                               # Branch name to push to
+BRANCH_NAME="master"                               # Branch name to push to
 ACCESS_TOKEN="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" # Replace with your personal access token
 
 # Navigate to the local repository directory
-cd /path/to/your/repository  # Replace with the path to your local Git repo
+# Replace with the path to your local Git repo
 
 # Check for uncommitted changes
 if [[ -n $(git status --porcelain) ]]; then
