@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import WalletButton from './WalletButton';
 
 const Landing = () => {
    const [attribute, setAttribute] = useState('');
    const [value, setValue] = useState('');
-//  adding comment
+
+   
    // Handle changes for attribute selection
    const handleAttributeChange = (e) => {
       setAttribute(e.target.value);
@@ -17,13 +19,13 @@ const Landing = () => {
 
    // Handle form submission
    const handleSubmit = async (e) => {
-      e.preventDefault();  // Prevent the default form submission
+      e.preventDefault(); // Prevent the default form submission
 
       try {
          // Send a POST request to generate ZKP
          const response = await axios.post('http://localhost:5000/generate_zkp', {
             attribute: attribute,
-            value: value
+            value: value,
          });
 
          // Log the response data for debugging
@@ -39,31 +41,39 @@ const Landing = () => {
    };
 
    return (
-      <div className="container">
-         <h1>Welcome to the Landing Page</h1>
-
-         <form onSubmit={handleSubmit}>
-            <label>
-               Select Attribute:
-               <select value={attribute} onChange={handleAttributeChange} required>
-                  <option value="">Select...</option>
-                  <option value="age">Age</option>
-                  <option value="gender">Gender</option>
-                  <option value="address">Address</option>
-                  <option value="dob">Date of Birth</option>
-                  <option value="mobile">Mobile Number</option>
-               </select>
-            </label>
-            <br />
-            <br />
-            <label>
-               Enter Attribute Value:
-               <input type="text" value={value} onChange={handleValueChange} required />
-            </label>
-            <button type="submit">Generate ZKP</button>
-            <br />
-            <br />
-         </form>
+      <div className="container d-flex justify-content-center align-items-center min-vh-100">
+         <div className="card p-4 shadow-sm" style={{ width: '400px' }}>
+            <h1 className="text-center mb-4">Generate Zero-Knowledge Proof</h1>
+            <form onSubmit={handleSubmit}>
+               <div className="mb-3">
+                  <label className="form-label">Select Attribute:</label>
+                  <select 
+                     value={attribute} 
+                     onChange={handleAttributeChange} 
+                     className="form-select" 
+                     required
+                  >
+                     <option value="">Select...</option>
+                     <option value="age">Age</option>
+                     <option value="gender">Gender</option>
+                     <option value="address">Address</option>
+                     <option value="dob">Date of Birth</option>
+                     <option value="mobile">Mobile Number</option>
+                  </select>
+               </div>
+               <div className="mb-3">
+                  <label className="form-label">Enter Attribute Value:</label>
+                  <input 
+                     type="text" 
+                     value={value} 
+                     onChange={handleValueChange} 
+                     className="form-control" 
+                     required 
+                  />
+               </div>
+               <button type="submit" className="btn btn-success w-100">Generate ZKP</button>
+            </form>
+         </div>
       </div>
    );
 };

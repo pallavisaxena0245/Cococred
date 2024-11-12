@@ -10,8 +10,10 @@ function App() {
       <Navbar title="Cococred" />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace/>}/>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login user_choice='user'/>} />
         <Route path="/home" element={<Landing />} />
+        <Route path="/user_login" element={<Login user_choice='user'/>} />
+        <Route path="/auth_login" element={<Login user_choice='admin'/>} />
       </Routes>
     </Router>
   );

@@ -1,7 +1,7 @@
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 
-function Login() {
+function Login({user_choice}) {
     const clientId = process.env.REACT_APP_CLIENT_ID;
     // Define clientId here
     const navigate = useNavigate();
@@ -21,9 +21,10 @@ function Login() {
     
 
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+
     <form style={{ width: '300px', padding: '20px', backgroundColor: '#ccffcc', borderRadius: '8px' }}>
         <div className="form-group">
-            <label htmlFor="exampleInputEmail1" style={{ color: '#006600' }}>Email address</label>
+            <label htmlFor="exampleInputEmail1" style={{ color: '#006600' }}>Enter {user_choice} email address</label>
             <input
                 type="email"
                 className="form-control"
@@ -32,12 +33,9 @@ function Login() {
                 placeholder="Enter email"
                 style={{ backgroundColor: '#e6ffe6', borderColor: '#66cc66', color: '#004d00' }}
             />
-            <small id="emailHelp" className="form-text" style={{ color: '#339933' }}>
-                We'll never share your email with anyone else.
-            </small>
         </div>
         <div className="form-group">
-            <label htmlFor="exampleInputPassword1" style={{ color: '#006600' }}>Password</label>
+            <label htmlFor="exampleInputPassword1" style={{ color: '#006600' }}>Enter {user_choice} password</label>
             <input
                 type="password"
                 className="form-control"
@@ -53,6 +51,26 @@ function Login() {
                 Submit
             </button>
         </div>
+
+
+        <div className="text-center mt-3">
+                        {user_choice == 'user' ? (
+                            <>
+                            {console.log(user_choice)}
+                            <Link to="/auth_login" style={{ color: '#339933' }}>
+                                Not a user? Go to authority login
+                            </Link>
+                            </>
+                            
+                        ) : (
+                            <>
+                            {console.log("admin" + user_choice)}
+                            <Link to="/user_login" style={{ color: '#339933' }}>
+                                Not an authority? Go to user login
+                            </Link>
+                            </>
+                        )}
+                    </div>
 
         <div className="container py-3">
             <GoogleOAuthProvider clientId={clientId}>
