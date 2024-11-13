@@ -3,7 +3,7 @@
 # User inputs
 REPO_URL="https://github.com/pallavisaxena0245/Cococred.git"    # Replace with your repo URL
 BRANCH_NAME="master"                               # Branch name to push to
-ACCESS_TOKEN="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" # Replace with your personal access token
+ACCESS_TOKEN="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" # Replace with your personal access token
 
 # Navigate to the local repository directory
 # Replace with the path to your local Git repo
