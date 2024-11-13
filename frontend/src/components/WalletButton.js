@@ -38,6 +38,7 @@ function WalletButton() {
         // Cleanup the event listener on component unmount
         
     }, []);
+    
 
     return (
         <div>
