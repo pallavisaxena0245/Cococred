@@ -16,7 +16,7 @@ if [[ -n $(git status --porcelain) ]]; then
     git add .
 
     # Commit the changes
-    git commit -m "AuthContext functionality added"
+    git commit -m "fixed Walletbutton  error"
 
     # Push the changes to the remote repository
     echo "Pushing changes to GitHub..."

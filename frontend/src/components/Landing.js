@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import WalletButton from './WalletButton';
 
 
 const Landing = () => {
@@ -73,6 +72,7 @@ const Landing = () => {
                      required 
                   />
                </div>
+         
                <button type="submit" className="btn btn-success w-100">Generate ZKP</button>
             </form>
          </div>

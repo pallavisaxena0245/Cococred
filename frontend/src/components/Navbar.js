@@ -1,7 +1,6 @@
 import React from 'react'
 import logo from './logo.png';
 import WalletButton from './WalletButton';
-
 const Navbar = (props) => {
   return (
     <>
@@ -15,7 +14,20 @@ const Navbar = (props) => {
             {props.title}
         </a>
         <WalletButton/>
+        <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            style={{ borderColor: 'white' }}
+        >
             <span className="navbar-toggler-icon" style={{ color: 'white' }}></span>
+        </button>
+
+      
     </nav>
 </>
   )
