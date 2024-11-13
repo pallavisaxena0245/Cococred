@@ -12,6 +12,7 @@ ACCESS_TOKEN="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" # Replace with your pers
 if [[ -n $(git status --porcelain) ]]; then
     echo "You have uncommitted changes. Committing changes..."
 
+
     # Stage all changes
     git add .
 
