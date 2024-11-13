@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import WalletButton from './WalletButton';
+
 
 const Landing = () => {
    const [attribute, setAttribute] = useState('');
    const [value, setValue] = useState('');
 
-   
+
    // Handle changes for attribute selection
    const handleAttributeChange = (e) => {
       setAttribute(e.target.value);
@@ -44,6 +45,7 @@ const Landing = () => {
       <div className="container d-flex justify-content-center align-items-center min-vh-100">
          <div className="card p-4 shadow-sm" style={{ width: '400px' }}>
             <h1 className="text-center mb-4">Generate Zero-Knowledge Proof</h1>
+   
             <form onSubmit={handleSubmit}>
                <div className="mb-3">
                   <label className="form-label">Select Attribute:</label>

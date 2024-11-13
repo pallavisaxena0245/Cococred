@@ -1,18 +1,23 @@
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import {useNavigate, Link} from 'react-router-dom';
+import { useContext } from 'react';
+import {AuthContext} from '../contexts/AuthService';
 
 function Login({user_choice}) {
     const clientId = process.env.REACT_APP_CLIENT_ID;
+    const {setAuthenticated}= useContext(AuthContext);
     // Define clientId here
     const navigate = useNavigate();
 
   function onSuccess(response) {
     console.log('Login successful:', response);
+   setAuthenticated(true);
     navigate('/home');
   }
 
   function onFailure(error) {
     console.log('Login unsuccessful:', error);
+   setAuthenticated(false);
   }
 
   return (
