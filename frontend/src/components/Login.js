@@ -6,6 +6,7 @@ import {AuthContext} from '../contexts/AuthService';
 function Login({user_choice}) {
     const clientId = process.env.REACT_APP_CLIENT_ID;
     const {setAuthenticated}= useContext(AuthContext);
+
     
     // Define clientId here
     const navigate = useNavigate();
