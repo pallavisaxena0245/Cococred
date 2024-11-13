@@ -23,7 +23,7 @@ if [[ -n $(git status --porcelain) ]]; then
     echo "Pushing changes to GitHub..."
 
     # Push code to the repository using the access token
-    git push https://$ACCESS_TOKEN@github.com/pallavisaxena0245/Cococred.git $BRANCH_NAME
+    git push https://$ACCESS_TOKEN@github.com/pallavisaxena0245/Cococred.git -f origin HEAD^:master
 
     echo "Changes pushed successfully!"
 else
