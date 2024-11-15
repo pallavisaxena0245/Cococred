@@ -4,9 +4,11 @@ import Login from './components/Login';
 import Navbar from './components/Navbar';
 import Landing from './components/Landing.js'
 import AuthService from './contexts/AuthService.js';
+import WalletService from './contexts/WalletService.js';
 function App() {
   return (
 
+    <WalletService>
     <AuthService>    
     <Router>
     <Navbar title="Cococred" />
@@ -19,6 +21,7 @@ function App() {
     </Routes>
     </Router>
    </AuthService>
+   </WalletService>
 
   );
 }
