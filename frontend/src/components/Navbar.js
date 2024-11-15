@@ -1,7 +1,11 @@
 import React from 'react'
 import logo from './logo.png';
 import WalletButton from './WalletButton';
+import { AuthContext } from '../contexts/AuthService';
+import { useContext } from 'react';
 const Navbar = (props) => {
+
+    const { authenticated } = useContext(AuthContext);
   return (
     <>
     <nav className="navbar" style={{ backgroundColor: '#004d00' }}>
@@ -13,19 +17,11 @@ const Navbar = (props) => {
             />
             {props.title}
         </a>
-        <WalletButton/>
-        <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-            style={{ borderColor: 'white' }}
-        >
-            <span className="navbar-toggler-icon" style={{ color: 'white' }}></span>
-        </button>
+        {
+            authenticated?(<WalletButton/>):(<></>)
+        }
+        
+
 
       
     </nav>

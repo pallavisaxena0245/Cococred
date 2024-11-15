@@ -38,14 +38,14 @@ function WalletButton() {
         // Cleanup the event listener on component unmount
         
     }, []);
-    
+
 
     return (
         <div>
             <button onClick={connectMetamask}>
-                {account ? 'Connected' : 'Connect Wallet'}
+                {account ? account : 'Connect Wallet'}
             </button>
-            {account && <p>Connected account: {account}</p>}
+            
         </div>
     );
 };

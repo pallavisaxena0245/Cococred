@@ -10,17 +10,17 @@ ACCESS_TOKEN="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" # Replace with your pers
 
 # Check for uncommitted changes
 if [[ -n $(git status --porcelain) ]]; then
-    echo "You have uncommitted changes. Committing changes..."
+    # echo "You have uncommitted changes. Committing changes..."
 
 
     # Stage all changes
-    git add .
+    # git add .
 
     # Commit the changes
-    git commit -m "fixed Walletbutton  error"
+    # git commit -m "fixed Walletbutton  error"
 
     # Push the changes to the remote repository
-    echo "Pushing changes to GitHub..."
+    # echo "Pushing changes to GitHub..."
 
     # Push code to the repository using the access token
     git push https://$ACCESS_TOKEN@github.com/pallavisaxena0245/Cococred.git -f origin HEAD^:master
