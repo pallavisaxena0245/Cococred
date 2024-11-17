@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# Zero-Knowledge Proof-Based Attribute Verification System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
 
-## Available Scripts
+This project enables users to prove specific attributes (e.g., age, gender, address) to third-party verifiers without revealing the actual values of those attributes. The verification process is facilitated by a zero-knowledge proof (ZKP) system, ensuring both privacy and security.
 
-In the project directory, you can run:
+### How It Works
 
-### `npm start`
+1. **User Submission**: A user fills in their details (age, gender, name, address, nationality) in a form.
+2. **Commitment by Government**: The government commits to each attribute and generates a ZKP for verification.
+3. **Proof Generation**: The government creates a non-interactive proof to share with the user.
+4. **Verification by Third-Party**: The user can present the proof to a third party, who verifies it without knowing the original attribute values.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Cryptographic Background
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Commitment Scheme Overview
 
-### `npm test`
+A commitment scheme allows a party to commit to a value while keeping it hidden and unchangeable once set. This scheme should satisfy:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Hiding**: The commitment should not reveal the committed value.
+- **Binding**: The committed value cannot be altered after the commitment is made.
 
-### `npm run build`
+#### Pedersen Commitment Formula:
+\[
+C = g^x \cdot h^r
+\]
+where:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- \( g \) and \( h \) are generators of a cryptographic group.
+- \( x \) is the attribute value.
+- \( r \) is a random nonce for security.
+- \( C \) is the resulting commitment.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Proof Generation (Government Side)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The government generates a proof to show that it knows the attribute \( x \) and nonce \( r \) such that \( C = g^x \cdot h^r \) holds true. This is done using a non-interactive ZKP.
 
-### `npm run eject`
+#### Steps:
+1. **Commit**: The government commits to \( x \) with a random nonce \( r \).
+2. **Generate Proof**:
+   - Create a challenge \( e \) using the hash of the commitment: \( e = H(C) \).
+   - Compute responses:
+     \[
+     s_x = x + e \cdot x_1, \quad s_r = r + e \cdot r_1
+     \]
+   where \( x_1 \) and \( r_1 \) are auxiliary values used for proof generation.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Verification Process (Third-Party Verifier)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The verifier checks the proof provided by the user to confirm the commitment's validity.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### Steps:
+1. **Receive the Commitment \( C \) and Proof \( (s_x, s_r) \)**.
+2. **Reconstruct Challenge**:
+   \[
+   e = H(C)
+   \]
+3. **Verify Proof**:
+   Compute:
+   \[
+   C' = g^{s_x} \cdot h^{s_r} \cdot C^{-e}
+   \]
+   If:
+   \[
+   C' \stackrel{?}{=} C
+   \]
+   holds true, the proof is valid, confirming that the user possesses the attribute \( x \) and corresponding nonce \( r \).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Mathematical Proofs for Correctness
 
-## Learn More
+### Given:
+\[
+C = g^x \cdot h^r
+\]
+Proof \( (s_x, s_r) \) with:
+\[
+s_x = x + e \cdot x_1, \quad s_r = r + e \cdot r_1
+\]
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Verification:
+\[
+C' = g^{s_x} \cdot h^{s_r} \cdot C^{-e}
+\]
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Expand \( C^{-e} \):
+\[
+C^{-e} = (g^x \cdot h^r)^{-e} = g^{-e \cdot x} \cdot h^{-e \cdot r}
+\]
 
-### Code Splitting
+#### Substitute into \( C' \):
+\[
+C' = g^{x + e \cdot x_1} \cdot h^{r + e \cdot r_1} \cdot g^{-e \cdot x} \cdot h^{-e \cdot r}
+\]
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### Simplify Exponents:
+\[
+C' = g^{e \cdot x_1} \cdot h^{e \cdot r_1}
+\]
 
-### Analyzing the Bundle Size
+### Conclusion:
+If \( C' \) matches the form \( g^{e \cdot x_1} \cdot h^{e \cdot r_1} \), the proof is valid.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Key Points to Understand
 
-### Making a Progressive Web App
+- **Fiat-Shamir Heuristic**: Transforms an interactive proof into a non-interactive proof using a hash function.
+- **Hiding Property**: Ensures the commitment does not reveal the actual value \( x \) or \( r \).
+- **Binding Property**: Prevents altering the value after commitment.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Benefits of This System
 
-### Advanced Configuration
+- **Privacy-Preserving**: Users can prove attributes without revealing actual values.
+- **Non-Interactive**: Verifiers can check proofs independently.
+- **Security**: Provides strong binding and hiding properties using cryptographic commitments and ZKPs.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Example Code Implementation
 
-### Deployment
+For cryptographic code examples and the complete implementation, please refer to the `src/` folder in this repository.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License.
