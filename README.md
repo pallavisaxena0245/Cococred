@@ -21,89 +21,123 @@ A commitment scheme allows a party to commit to a value while keeping it hidden 
 - **Binding**: The committed value cannot be altered after the commitment is made.
 
 #### Pedersen Commitment Formula:
-\[
-C = g^x \cdot h^r
-\]
-where:
 
-- \( g \) and \( h \) are generators of a cryptographic group.
-- \( x \) is the attribute value.
-- \( r \) is a random nonce for security.
-- \( C \) is the resulting commitment.
+The commitment formula for the attribute `x` and random nonce `r` is defined as:
+
+\[
+C = g^x * h^r
+\]
+
+Where:
+- `g` and `h` are generators of a cryptographic group.
+- `x` is the attribute value.
+- `r` is a random nonce for security.
+- `C` is the resulting commitment.
 
 ### Proof Generation (Government Side)
 
-The government generates a proof to show that it knows the attribute \( x \) and nonce \( r \) such that \( C = g^x \cdot h^r \) holds true. This is done using a non-interactive ZKP.
+The government generates a proof to show that it knows the attribute `x` and nonce `r` such that `C = g^x * h^r` holds true. This is done using a non-interactive zero-knowledge proof.
 
 #### Steps:
-1. **Commit**: The government commits to \( x \) with a random nonce \( r \).
+1. **Commit**: The government commits to `x` with a random nonce `r`.
 2. **Generate Proof**:
-   - Create a challenge \( e \) using the hash of the commitment: \( e = H(C) \).
+   - Create a challenge `e` using the hash of the commitment: 
+   
+   \[
+   e = H(C)
+   \]
+
    - Compute responses:
-     \[
-     s_x = x + e \cdot x_1, \quad s_r = r + e \cdot r_1
-     \]
-   where \( x_1 \) and \( r_1 \) are auxiliary values used for proof generation.
+   
+   \[
+   s_x = x + e * x_1
+   \]
+   where `x_1` is an auxiliary value used for proof generation.
+
+   \[
+   s_r = r + e * r_1
+   \]
+   where `r_1` is an auxiliary value used for proof generation.
 
 ### Verification Process (Third-Party Verifier)
 
 The verifier checks the proof provided by the user to confirm the commitment's validity.
 
 #### Steps:
-1. **Receive the Commitment \( C \) and Proof \( (s_x, s_r) \)**.
+1. **Receive the Commitment `C` and Proof `(s_x, s_r)`**.
 2. **Reconstruct Challenge**:
+
    \[
    e = H(C)
    \]
+
 3. **Verify Proof**:
-   Compute:
+   The verifier computes:
+
    \[
-   C' = g^{s_x} \cdot h^{s_r} \cdot C^{-e}
+   C' = g^{s_x} * h^{s_r} * C^{-e}
    \]
+
    If:
+
    \[
-   C' \stackrel{?}{=} C
+   C' = C
    \]
-   holds true, the proof is valid, confirming that the user possesses the attribute \( x \) and corresponding nonce \( r \).
+
+   holds true, the proof is valid, confirming that the user possesses the attribute `x` and corresponding nonce `r`.
 
 ## Mathematical Proofs for Correctness
 
 ### Given:
+
 \[
-C = g^x \cdot h^r
+C = g^x * h^r
 \]
-Proof \( (s_x, s_r) \) with:
+
+The proof `(s_x, s_r)` with:
+
 \[
-s_x = x + e \cdot x_1, \quad s_r = r + e \cdot r_1
+s_x = x + e * x_1, \quad s_r = r + e * r_1
 \]
 
 ### Verification:
+
 \[
-C' = g^{s_x} \cdot h^{s_r} \cdot C^{-e}
+C' = g^{s_x} * h^{s_r} * C^{-e}
 \]
 
 #### Expand \( C^{-e} \):
+
 \[
-C^{-e} = (g^x \cdot h^r)^{-e} = g^{-e \cdot x} \cdot h^{-e \cdot r}
+C^{-e} = (g^x * h^r)^{-e} = g^{-e * x} * h^{-e * r}
 \]
 
 #### Substitute into \( C' \):
+
 \[
-C' = g^{x + e \cdot x_1} \cdot h^{r + e \cdot r_1} \cdot g^{-e \cdot x} \cdot h^{-e \cdot r}
+C' = g^{x + e * x_1} * h^{r + e * r_1} * g^{-e * x} * h^{-e * r}
 \]
 
 #### Simplify Exponents:
+
 \[
-C' = g^{e \cdot x_1} \cdot h^{e \cdot r_1}
+C' = g^{e * x_1} * h^{e * r_1}
 \]
 
 ### Conclusion:
-If \( C' \) matches the form \( g^{e \cdot x_1} \cdot h^{e \cdot r_1} \), the proof is valid.
+
+If:
+
+\[
+C' = g^{e * x_1} * h^{e * r_1}
+\]
+
+then the proof is valid, confirming that the user possesses the value `x` and nonce `r` corresponding to the commitment `C`.
 
 ## Key Points to Understand
 
 - **Fiat-Shamir Heuristic**: Transforms an interactive proof into a non-interactive proof using a hash function.
-- **Hiding Property**: Ensures the commitment does not reveal the actual value \( x \) or \( r \).
+- **Hiding Property**: Ensures the commitment does not reveal the actual value `x` or `r`.
 - **Binding Property**: Prevents altering the value after commitment.
 
 ## Benefits of This System
