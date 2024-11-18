@@ -1,83 +1,65 @@
-import React, { useContext, useState } from 'react';
+// LandingPage.js
+import React, { useState } from 'react';
+import Certificate from './Certificate';
 import axios from 'axios';
 
-
 const Landing = () => {
-   const [attribute, setAttribute] = useState('');
-   const [value, setValue] = useState('');
+   const [certificates, setCertificates] = useState({});
+  const [formData, setFormData] = useState({ name: '', age: '', gender: '', address: '' });
+  const [file, setFile] = useState(null);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-   // Handle changes for attribute selection
-   const handleAttributeChange = (e) => {
-      setAttribute(e.target.value);
-   };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-   // Handle changes for attribute value input
-   const handleValueChange = (e) => {
-      setValue(e.target.value);
-   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('age', formData.age);
+    data.append('gender', formData.gender);
+    data.append('address', formData.address);
+    data.append('document', file);
 
-   // Handle form submission
-   const handleSubmit = async (e) => {
-      e.preventDefault(); // Prevent the default form submission
+    try {
+      const response = await axios.post('http://localhost:5000/generate_commitment', data);
+      alert('Commitment generated successfully!');
+      setCertificates(response.data.commitments);
+     
+     
 
-      try {
-         // Send a POST request to generate ZKP
-         const response = await axios.post('http://localhost:5000/generate_zkp', {
-            attribute: attribute,
-            value: value,
-         });
+      // Iterate over the commitments object
+     
 
-         // Log the response data for debugging
-         console.log('ZKP Response:', response.data);
+    } catch (error) {
+      console.error('Error generating commitment:', error);
+    }
+  };
 
-         // Show success message with commitment (response data)
-         alert('Commitment generated:\n' + JSON.stringify(response.data, null, 2));
-      } catch (error) {
-         // Catch any errors
-         console.error('Error generating ZKP:', error);
-         alert('An error occurred while generating ZKP.');
-      }
-   };
+  return (
+    <div>
+      <h1>Welcome to Cococred</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="name" placeholder="Name" onChange={handleChange} required />
+        <input type="number" name="age" placeholder="Age" onChange={handleChange} required />
+        <input type="text" name="gender" placeholder="Gender" onChange={handleChange} required />
+        <input type="text" name="address" placeholder="Address" onChange={handleChange} required />
+        <input type="file" onChange={handleFileChange} required />
+        <button type="submit">Generate Commitment</button>
+      </form>
 
-   return (
-      <div className="container d-flex justify-content-center align-items-center min-vh-100">
-         <div className="card p-4 shadow-sm" style={{ width: '400px' }}>
-            <h1 className="text-center mb-4">Generate Zero-Knowledge Proof</h1>
-   
-            <form onSubmit={handleSubmit}>
-               <div className="mb-3">
-                  <label className="form-label">Select Attribute:</label>
-                  <select 
-                     value={attribute} 
-                     onChange={handleAttributeChange} 
-                     className="form-select" 
-                     required
-                  >
-                     <option value="">Select...</option>
-                     <option value="age">Age</option>
-                     <option value="gender">Gender</option>
-                     <option value="address">Address</option>
-                     <option value="dob">Date of Birth</option>
-                     <option value="mobile">Mobile Number</option>
-                  </select>
-               </div>
-               <div className="mb-3">
-                  <label className="form-label">Enter Attribute Value:</label>
-                  <input 
-                     type="text" 
-                     value={value} 
-                     onChange={handleValueChange} 
-                     className="form-control" 
-                     required 
-                  />
-               </div>
-         
-               <button type="submit" className="btn btn-success w-100">Generate ZKP</button>
-            </form>
-         </div>
-      </div>
-   );
+      <div>
+      {Object.entries(certificates).map(([attribute, commitment]) => (
+        <Certificate field={attribute} commitment={commitment} />
+      ))}
+    </div>
+      
+    </div>
+  );
 };
 
 export default Landing;
