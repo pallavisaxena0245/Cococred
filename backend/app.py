@@ -14,8 +14,8 @@ def attribute_to_number(attribute):
     hash_object = hashlib.sha256(attribute.encode())
     return int(hash_object.hexdigest(), 16) % p
 
-@app.route('/generate_commitment', methods=['POST'])
-def generate_commitment():
+@app.route('/verify_profile', methods=['POST'])
+def verify_profile():
     if 'document' not in request.files:
         return jsonify({'error': 'No document uploaded'}), 400
 
@@ -25,6 +25,8 @@ def generate_commitment():
     gender = request.form.get('gender')
     address = request.form.get('address')
     document = request.files['document']
+
+    
 
     # Generate commitments for each attribute
     attributes = {'name': name, 'age': age, 'gender': gender, 'address': address}

@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Landing from './components/Landing.js'
 import AuthService from './contexts/AuthService.js';
 import WalletService from './contexts/WalletService.js';
+import Attribute from './components/Attribute.js';
 function App() {
   return (
 
@@ -13,6 +14,7 @@ function App() {
     <Router>
     <Navbar title="Cococred" />
     <Routes>
+      <Route path="/attribute_cert" element={<Attribute/>} />
       <Route path="/" element={<Navigate to="/login" replace/>}/>
       <Route path="/login" element={<Login user_choice='user'/>} />
       <Route path="/home" element={<Landing />} />
