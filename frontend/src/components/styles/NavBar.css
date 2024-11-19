@@ -1,0 +1,34 @@
+.navbar {
+    background: linear-gradient(90deg, #a3cef1, #d5a6e8);
+    color: white;
+    width: 100%;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.connect-wallet-btn {
+    background-color: #c3baf7;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+}

@@ -1,0 +1,74 @@
+/* Container for the login page */
+.user-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f3f4fa; /* Light purple background */
+}
+
+/* Form styling */
+.user-login-form {
+    width: 300px;
+    padding: 20px;
+    background-color: #ffffff; /* White form background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Label styling */
+.form-label {
+    color: #4a4e69; /* Muted dark purple */
+    font-weight: bold;
+}
+
+/* Input field styling */
+.form-control {
+    background-color: #f8f9fc; /* Slightly off-white */
+    border: 1px solid #c4c8d0; /* Soft border */
+    border-radius: 5px;
+    color: #4a4e69;
+}
+
+/* Submit button styling */
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    background-color: #6c5ce7; /* Light blue */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.submit-button:hover {
+    background-color: #a29bfe; /* Softer hover effect */
+}
+
+/* Link styling */
+.switch-login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.switch-login-link a {
+    color: #6c5ce7; /* Light blue */
+    text-decoration: none;
+}
+
+.switch-login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Google login button container */
+.google-login-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
