@@ -8,6 +8,7 @@ import WalletService from './contexts/WalletService.js';
 import Profile from './components/Profile.js';
 import Attribute from './components/Attribute.js';
 import CertificateService from './contexts/CertificateService.js';
+import Certificate from './components/Certificate.js';
 function App() {
   return (
    <CertificateService>
@@ -23,6 +24,7 @@ function App() {
       <Route path="/home" element={<Landing />} />
       <Route path="/user_login" element={<Login user_choice='user'/>} />
       <Route path="/auth_login" element={<Login user_choice='admin'/>} />
+      <Route path="/certificate" element={<Certificate/>}/>
     </Routes>
     </Router>
    </AuthService>

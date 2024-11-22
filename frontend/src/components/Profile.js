@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { VerifiedContext, HashContext, CommitmentContext } from '../contexts/CertificateService';
 import axios from 'axios';
 import './styles/Profile.css'; // Importing the CSS file
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
    const { setHash } = useContext(HashContext);
@@ -9,6 +10,7 @@ const Profile = () => {
    const { setCommitment } = useContext(CommitmentContext);
    const [formData, setFormData] = useState({ name: '', age: '', gender: '', address: '', govt_id: '' });
    const [file, setFile] = useState(null);
+   const navigate = useNavigate();
 
    const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,9 +38,12 @@ const Profile = () => {
          // make verified variable set by authority
          setVerified(true);
          console.log(response);
+         navigate('/certificate', {state: {commitment:response.data.commitment, hash:response.data.hash, verified:response.data.verified}});
       } catch (error) {
          console.error('Error generating commitment:', error);
       }
+
+      
    };
 
    function alertUser(){
