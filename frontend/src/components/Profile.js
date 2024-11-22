@@ -33,12 +33,17 @@ const Profile = () => {
          alert('Commitment generated successfully!');
          setCommitment(response.data.commitment);
          setHash(response.data.hash);
+         // make verified variable set by authority
          setVerified(true);
          console.log(response);
       } catch (error) {
          console.error('Error generating commitment:', error);
       }
    };
+
+   function alertUser(){
+      alert("Form details submitted successfully");
+   }
 
    return (
       <div className="profile-container">
@@ -125,7 +130,7 @@ const Profile = () => {
             </div>
 
             <div className="submit-button-container">
-               <button type="submit" className="btn submit-button">
+               <button type="submit" className="btn submit-button" onSubmit={alertUser}>
                   Generate Commitment
                </button>
             </div>

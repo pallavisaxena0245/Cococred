@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import random
+import json
 import hashlib
 
 app = Flask(__name__)
@@ -21,12 +22,14 @@ def verify_profile():
 
     # Extract user data
 
+    print(request)
+
     data = {
     "name" : request.form.get('name'),
     "age" : request.form.get('age'),
     "gender" : request.form.get('gender'),
     "address" : request.form.get('address'),
-    "govt_id" : request.form.get('national_id')
+     "govt_id" : request.form.get('govt_id'),
     }
     document = request.files['document']
     
@@ -41,7 +44,7 @@ def verify_profile():
 
 
     # Generate commitments for each attribute
-    value_num = attribute_to_number(data.govt_id)
+    value_num = attribute_to_number(data["govt_id"])
     r = random.randint(1, p - 1)
     C = (pow(g, value_num, p) * pow(g, r, p)) % p  # C = g^value * g^r (mod p)
     commitment = C
