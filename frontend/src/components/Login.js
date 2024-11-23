@@ -3,6 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthService';
 import './styles/Login.css'; // Importing the CSS file
+import "core-js/stable/atob";
+import { jwtDecode } from "jwt-decode";
+const { v4: uuidv4 } = require('uuid');
 
 function Login() {
     const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -11,6 +14,16 @@ function Login() {
 
     function onSuccess(response) {
         console.log('Login successful:', response);
+        const credential = response.credential; // your credential
+
+        const decoded = jwtDecode(credential);
+        const email = decoded.email;
+        console.log("Email:", email);
+
+
+        const userId = uuidv4();
+        console.log("Generated user ID:", userId);
+        
         setAuthenticated(true);
         localStorage.setItem('authenticated', 'true');
         navigate('/home');
