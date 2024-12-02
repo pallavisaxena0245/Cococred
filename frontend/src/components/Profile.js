@@ -11,6 +11,8 @@ const Profile = () => {
    const [formData, setFormData] = useState({ name: '', age: '', gender: '', address: '', govt_id: '' });
    const [file, setFile] = useState(null);
    const navigate = useNavigate();
+   const [contractInfo, setContractInfo] = useState(null);
+
 
    const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });

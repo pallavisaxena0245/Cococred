@@ -55,7 +55,7 @@ const createTables = async () => {
 
 // Create user endpoint
 app.post('/api/create-user', async (req, res) => {
-    const { email } = req.body;  // Assuming email is sent in the request body
+    const { email } = req.body || 'dummyemail@gmail.com';  // Assuming email is sent in the request body
     if (!email) {
         return res.status(400).json({ message: 'Email is required' });
     }

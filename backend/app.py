@@ -78,5 +78,8 @@ def attribute_cert():
         'message': 'Commitment on {attribute_name} generated successfully.'
     })
 
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
