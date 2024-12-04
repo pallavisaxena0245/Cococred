@@ -40,6 +40,40 @@ const Profile = () => {
          // make verified variable set by authority
          setVerified(true);
          console.log(response);
+
+         // store in blockchain;
+
+         if(window.ethereum){
+
+            const provider = window.ethereum.HttpProvider.("requesteth");
+            ethers.getJSONrpcProvider();
+
+            const contract_address = " ";
+            //import {CertReg } from '../backend/abis/ContractRegister.js
+
+            const abi = CertReg.abi;
+            const byte_code = CertReg.bytecode;
+
+            const certificateReg =ethers.getContractFactory("CertificateRegistery");
+             const contract =certificateReg.deploy(esponse.data.commitment, response.data.hash , false , provider.address );
+
+             contract.deployed();
+
+            //display
+
+            const all_certs = contract.certificates;
+
+            all_certs.map( {cert} => {
+               <Cerificate commitment = {cert.commitment} hash = {cert.hash} />
+            })
+
+            
+
+
+         }
+         else{
+            alert("Error connecting to Metamask wallet");
+         }
          navigate('/certificate', {state: {commitment:response.data.commitment, hash:response.data.hash, verified:response.data.verified}});
       } catch (error) {
          console.error('Error generating commitment:', error);
