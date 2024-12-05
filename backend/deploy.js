@@ -1,26 +1,21 @@
-const {ethers} = require("hardhat")
-const fs = require("fs")
+const hre = require("hardhat");
 
 async function main() {
-    const CertificateRegistry = await ethers.getContractFactory("CertificateRegistry");
-    const registry = await CertificateRegistry.deploy();
-    registry.deployed();
 
+    const [deployer] = await hre.ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+    console.log("Account balance: ", deployer.getBalance().toString());
 
-    const contractInfo = {
-    contractAddress : registry.address,
-    abi : JSON.parse(registry.interface.format("json"))
-    };
+    const certContract = await hre.ethers.getContractFactory("CertificateRegistry");
+    const contract = await certContract.deploy("dummy_commitment", "dummy_hash", deployer.address);
 
-    fs.writeFileSync("./abis/CertificateRegistry.json");
-    console.log(`Contract deployed to: ${registry.address}`);
+    await contract.deployed();
 
-
-
+    console.log("SimpleContract deployed to:", contract.address);
 }
 
 
 main().catch((error) => {
     console.error(error);
-    process.exit(1);
-  });
+    process.exitCode = 1;
+});

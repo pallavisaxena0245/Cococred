@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { VerifiedContext, HashContext, CommitmentContext } from '../contexts/CertificateService';
 import axios from 'axios';
-import './styles/Profile.css'; // Importing the CSS file
-import { useNavigate } from 'react-router-dom';
+import { ethers } from 'ethers';
+import './styles/Profile.css';
 
 const Profile = () => {
    const { setHash } = useContext(HashContext);
@@ -10,9 +10,8 @@ const Profile = () => {
    const { setCommitment } = useContext(CommitmentContext);
    const [formData, setFormData] = useState({ name: '', age: '', gender: '', address: '', govt_id: '' });
    const [file, setFile] = useState(null);
-   const navigate = useNavigate();
-   const [contractInfo, setContractInfo] = useState(null);
-
+   const [certificate, setCertificate] = useState(null); // State to store certificate data
+   const [showCertificate, setShowCertificate] = useState(false); // State to toggle certificate modal
 
    const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,66 +34,58 @@ const Profile = () => {
       try {
          const response = await axios.post('http://localhost:5000/verify_profile', data);
          alert('Commitment generated successfully!');
-         setCommitment(response.data.commitment);
-         setHash(response.data.hash);
-         // make verified variable set by authority
+
+         const { commitment, hash } = response.data;
+         setCommitment(commitment);
+         setHash(hash);
          setVerified(true);
-         console.log(response);
 
-         // store in blockchain;
+         if (window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            await provider.send('eth_requestAccounts', []); // Request access to Metamask
 
-         if(window.ethereum){
+            const signer = provider.getSigner();
+            const contractAddress = 'YOUR_CONTRACT_ADDRESS_HERE'; // Replace with deployed contract address
+            const abi = [/* Contract ABI here */]; // Replace with your contract's ABI
 
-            const provider = window.ethereum.HttpProvider.("requesteth");
-            ethers.getJSONrpcProvider();
+            const contract = new ethers.Contract(contractAddress, abi, signer);
+            const tx = await contract.registerCertificate(commitment, hash, await signer.getAddress());
+            await tx.wait();
 
-            const contract_address = " ";
-            //import {CertReg } from '../backend/abis/ContractRegister.js
-
-            const abi = CertReg.abi;
-            const byte_code = CertReg.bytecode;
-
-            const certificateReg =ethers.getContractFactory("CertificateRegistery");
-             const contract =certificateReg.deploy(esponse.data.commitment, response.data.hash , false , provider.address );
-
-             contract.deployed();
-
-            //display
-
-            const all_certs = contract.certificates;
-
-            all_certs.map( {cert} => {
-               <Cerificate commitment = {cert.commitment} hash = {cert.hash} />
-            })
-
-            
-
-
+            alert('Certificate successfully registered on the blockchain!');
+         } else {
+            alert('Please connect to Metamask to continue.');
          }
-         else{
-            alert("Error connecting to Metamask wallet");
-         }
-         navigate('/certificate', {state: {commitment:response.data.commitment, hash:response.data.hash, verified:response.data.verified}});
+
+         setCertificate({
+            name: formData.name,
+            age: formData.age,
+            gender: formData.gender,
+            address: formData.address,
+            commitment,
+            hash,
+            date: new Date().toLocaleDateString(),
+         });
+         setShowCertificate(true);
       } catch (error) {
-         console.error('Error generating commitment:', error);
+         console.error('Error:', error);
+         alert('An error occurred. Please try again.');
       }
-
-      
    };
 
-   function alertUser(){
-      alert("Form details submitted successfully");
-   }
+   const closeCertificate = () => {
+      setShowCertificate(false);
+   };
 
    return (
-      <div className="profile-container">
-         <form onSubmit={handleSubmit} className="profile-form">
-            <h2 className="profile-title">User Profile Verification</h2>
+      <div className="profile">
+         <form onSubmit={handleSubmit} className="profile__form">
+            <h2 className="profile__title">User Profile Verification</h2>
 
-            <div className="form-group">
-               <label htmlFor="nameInput" className="form-label">Name</label>
+            <div className="profile__form-group">
+               <label htmlFor="nameInput" className="profile__label">Name</label>
                <input
-                  className="form-control"
+                  className="profile__input"
                   type="text"
                   id="nameInput"
                   name="name"
@@ -104,10 +95,10 @@ const Profile = () => {
                />
             </div>
 
-            <div className="form-group">
-               <label htmlFor="ageInput" className="form-label">Age</label>
+            <div className="profile__form-group">
+               <label htmlFor="ageInput" className="profile__label">Age</label>
                <input
-                  className="form-control"
+                  className="profile__input"
                   type="number"
                   id="ageInput"
                   name="age"
@@ -117,10 +108,10 @@ const Profile = () => {
                />
             </div>
 
-            <div className="form-group">
-               <label htmlFor="genderSelect" className="form-label">Gender</label>
+            <div className="profile__form-group">
+               <label htmlFor="genderSelect" className="profile__label">Gender</label>
                <select
-                  className="form-control"
+                  className="profile__select"
                   id="genderSelect"
                   name="gender"
                   onChange={handleChange}
@@ -133,10 +124,10 @@ const Profile = () => {
                </select>
             </div>
 
-            <div className="form-group">
-               <label htmlFor="addressTextarea" className="form-label">Address</label>
+            <div className="profile__form-group">
+               <label htmlFor="addressTextarea" className="profile__label">Address</label>
                <textarea
-                  className="form-control"
+                  className="profile__textarea"
                   id="addressTextarea"
                   name="address"
                   placeholder="Enter your address"
@@ -146,23 +137,23 @@ const Profile = () => {
                ></textarea>
             </div>
 
-            <div className="form-group">
-               <label htmlFor="idInput" className="form-label">Government Id Number</label>
+            <div className="profile__form-group">
+               <label htmlFor="idInput" className="profile__label">Government ID Number</label>
                <input
-                  className="form-control"
+                  className="profile__input"
                   type="number"
                   id="idInput"
                   name="govt_id"
-                  placeholder="Enter your govt_id number"
+                  placeholder="Enter your Govt ID number"
                   onChange={handleChange}
                   required
                />
             </div>
 
-            <div className="form-group">
-               <label htmlFor="fileInput" className="form-label">Government Issued Identity Proof</label>
+            <div className="profile__form-group">
+               <label htmlFor="fileInput" className="profile__label">Government Issued ID Proof</label>
                <input
-                  className="form-control"
+                  className="profile__input"
                   type="file"
                   id="fileInput"
                   onChange={handleFileChange}
@@ -170,12 +161,33 @@ const Profile = () => {
                />
             </div>
 
-            <div className="submit-button-container">
-               <button type="submit" className="btn submit-button" onSubmit={alertUser}>
-                  Generate Commitment
-               </button>
-            </div>
+            <button type="submit" className="btn btn--primary">
+               Generate Commitment
+            </button>
          </form>
+
+         {showCertificate && certificate && (
+            <div className="modal">
+               <div className="modal__content">
+                  <h1 className="modal__title">Certificate of Verification</h1>
+                  <p className="modal__subtitle">This certifies the following information:</p>
+
+                  <div className="modal__details">
+                     <p><strong>Name:</strong> {certificate.name}</p>
+                     <p><strong>Age:</strong> {certificate.age}</p>
+                     <p><strong>Gender:</strong> {certificate.gender}</p>
+                     <p><strong>Address:</strong> {certificate.address}</p>
+                     <p><strong>Commitment:</strong> {certificate.commitment}</p>
+                     <p><strong>Hash:</strong> {certificate.hash}</p>
+                     <p><strong>Date:</strong> {certificate.date}</p>
+                  </div>
+
+                  <button className="btn btn--secondary" onClick={closeCertificate}>
+                     Close
+                  </button>
+               </div>
+            </div>
+         )}
       </div>
    );
 };
