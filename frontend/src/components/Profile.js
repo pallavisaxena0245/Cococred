@@ -171,7 +171,7 @@ const Profile = () => {
             </button>
          </form>
 
-         {/* {showCertificate && certificate && (
+         {showCertificate && certificate && (
             <div className="modal">
                <div className="modal__content">
                   <h1 className="modal__title">Certificate of Verification</h1>
@@ -192,7 +192,7 @@ const Profile = () => {
                   </button>
                </div>
             </div>
-         )} */}
+         )}
       </div>
    );
 };
