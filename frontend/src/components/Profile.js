@@ -5,9 +5,12 @@ import { ethers } from 'ethers';
 import './styles/Profile.css';
 
 const Profile = () => {
-   const { setHash } = useContext(HashContext);
-   const { setVerified } = useContext(VerifiedContext);
-   const { setCommitment } = useContext(CommitmentContext);
+
+   const { verified, setVerified } = useContext(VerifiedContext);
+  const { hash, setHash } = useContext(HashContext);
+  const { commitment, setCommitment } = useContext(CommitmentContext);
+
+
    const [formData, setFormData] = useState({ name: '', age: '', gender: '', address: '', govt_id: '' });
    const [file, setFile] = useState(null);
    const [certificate, setCertificate] = useState(null); // State to store certificate data
@@ -45,8 +48,10 @@ const Profile = () => {
             await provider.send('eth_requestAccounts', []); // Request access to Metamask
 
             const signer = provider.getSigner();
-            const contractAddress = 'YOUR_CONTRACT_ADDRESS_HERE'; // Replace with deployed contract address
-            const abi = [/* Contract ABI here */]; // Replace with your contract's ABI
+            const contractAddress = '0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6'; // Replace with deployed contract address
+            const abi = [
+              
+             ]; // Replace with your contract's ABI
 
             const contract = new ethers.Contract(contractAddress, abi, signer);
             const tx = await contract.registerCertificate(commitment, hash, await signer.getAddress());
@@ -166,7 +171,7 @@ const Profile = () => {
             </button>
          </form>
 
-         {showCertificate && certificate && (
+         {/* {showCertificate && certificate && (
             <div className="modal">
                <div className="modal__content">
                   <h1 className="modal__title">Certificate of Verification</h1>
@@ -187,7 +192,7 @@ const Profile = () => {
                   </button>
                </div>
             </div>
-         )}
+         )} */}
       </div>
    );
 };

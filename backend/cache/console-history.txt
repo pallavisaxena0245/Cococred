@@ -1,0 +1,13 @@
+contract.address
+const contract = await ethers.getContractAt("CertificateRegister", contractAddress)
+const contract = await ethers.getContractAt("CertificateRegister", contractAddress);
+exit
+console.log("Contract deployed to:", contract.address);
+onsole.log("Contract deployed to:", contract.address);
+await contract.deployed();
+ const contract = await CertificateRegister.deploy(govtOfficials);
+const govtOfficials = ["0x70997970C51812dc3A010C7d01b50e0d17dc79C8"];
+const govtOfficials = ["0x70997970C51812dc3A010C7d01b50e0d17dc79C8"]; // Replace with actual addresses
+const CertificateRegister = await ethers.getContractFactory("CertificateRegister");
+run --network localhost deploy.js
+npx hardhat run --network localhost deploy.js

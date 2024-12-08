@@ -1,20 +1,20 @@
 const hre = require("hardhat");
 
 async function main() {
+    // Deploy the CertificateRegister contract
+    const CertificateRegister = await hre.ethers.getContractFactory("CertificateRegister");
+    const govOfficials = ["0x70997970C51812dc3A010C7d01b50e0d17dc79C8"]; // Replace this with the actual list of government officials' addresses
+    const certificateRegister = await CertificateRegister.deploy(govOfficials);
+    
+    console.log("CertificateRegister deployed to:", certificateRegister.target);
 
-    const [deployer] = await hre.ethers.getSigners();
-    console.log("Deploying contracts with the account:", deployer.address);
-    console.log("Account balance: ", deployer.getBalance().toString());
-
-    const certContract = await hre.ethers.getContractFactory("CertificateRegistry");
-    const contract = await certContract.deploy("dummy_commitment", "dummy_hash", deployer.address);
-
-    await contract.deployed();
-
-    console.log("SimpleContract deployed to:", contract.address);
+    // Now you can interact with the deployed contract
+    // For example, calling getCertificate to retrieve details about a particular certificate:
+    // const certificate = await certificateRegister.getCertificate(someAddress);
+    // console.log("Certificate details:", certificate);
 }
 
-
+// Error handling
 main().catch((error) => {
     console.error(error);
     process.exitCode = 1;

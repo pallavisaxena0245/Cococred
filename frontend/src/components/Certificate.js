@@ -6,7 +6,8 @@ const Certificate = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { commitment, hash, verified } = location.state || {};
+  // Destructure state with default values
+  const { commitment = '', hash = '', verified = false } = location.state || {};
 
   // Redirect to the homepage if data is missing
   useEffect(() => {
@@ -14,7 +15,7 @@ const Certificate = () => {
       alert('Missing certificate data! Redirecting to the homepage.');
       navigate('/home'); // Redirect to the homepage
     }
-  }, [commitment, hash, verified, navigate]);
+  }, [commitment, hash, navigate]);
 
   // Close the popup and navigate to the homepage
   const handleClose = () => {
