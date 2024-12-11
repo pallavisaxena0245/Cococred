@@ -10,9 +10,8 @@ contract CertificateRegister {
         address verifier;
     }
 
-    uint public cert_count;
-
     mapping(address => Certificate) public certificates;
+    Certificate[] public all_certs;
     address[] public govtOfficials;
 
     // Modifier to restrict access to government officials
@@ -33,8 +32,6 @@ contract CertificateRegister {
     constructor(address[] memory _govtOfficials) {
         require(_govtOfficials.length > 0, "At least one government official must be specified");
         govtOfficials = _govtOfficials;
-
-        cert_count = 0;
     }
 
     // Function to register a new certificate
@@ -51,15 +48,16 @@ contract CertificateRegister {
         uint verifierIndex = uint(keccak256(abi.encodePacked(_requester, block.timestamp))) % govtOfficials.length;
         address verifier = govtOfficials[verifierIndex];
 
-        cert_count++;
-
-        certificates[_requester] = Certificate({
+        Certificate memory newCert = Certificate({
             commitment: _commitment,
             hash: _hash,
             verified: false,
             requester: _requester,
             verifier: verifier
         });
+
+        certificates[_requester] = newCert;
+        all_certs.push(newCert);
     }
 
     // Function to validate a certificate
@@ -68,27 +66,64 @@ contract CertificateRegister {
         require(cert.requester != address(0), "Certificate does not exist");
         require(cert.verifier == msg.sender, "Only the assigned verifier can validate this certificate");
         cert.verified = true;
+
+        // Update the corresponding certificate in all_certs
+        for (uint i = 0; i < all_certs.length; i++) {
+            if (all_certs[i].requester == _user) {
+                all_certs[i].verified = true;
+                break;
+            }
+        }
     }
 
     // Function to get all unverified certificates
-    function getCertificates() public view returns (Certificate[] memory) {
-        Certificate[] memory all_cert = new Certificate[](cert_count);
-        uint256 index = 0;
+    function getUnverifiedCertificates() public view returns (Certificate[] memory) {
+        uint count = 0;
 
-        // Iterate over the mapping to collect unverified certificates
-        for (uint256 i = 0; i < cert_count; i++) {
-            if (!certificates[address(i)].verified) {
-                all_cert[index] = certificates[address(i)];
+        // Count unverified certificates
+        for (uint i = 0; i < all_certs.length; i++) {
+            if (!all_certs[i].verified) {
+                count++;
+            }
+        }
+
+        // Create a memory array to store unverified certificates
+        Certificate[] memory unverified = new Certificate[](count);
+        uint index = 0;
+
+        for (uint i = 0; i < all_certs.length; i++) {
+            if (!all_certs[i].verified) {
+                unverified[index] = all_certs[i];
                 index++;
             }
         }
 
-        // Resize the array to the actual number of unverified certificates found
-        assembly {
-            mstore(all_cert, index)
+        return unverified;
+    }
+
+    // Function to get all verified certificates
+    function getVerifiedCertificates() public view returns (Certificate[] memory) {
+        uint count = 0;
+
+        // Count verified certificates
+        for (uint i = 0; i < all_certs.length; i++) {
+            if (all_certs[i].verified) {
+                count++;
+            }
         }
 
-        return all_cert;
+        // Create a memory array to store verified certificates
+        Certificate[] memory verified = new Certificate[](count);
+        uint index = 0;
+
+        for (uint i = 0; i < all_certs.length; i++) {
+            if (all_certs[i].verified) {
+                verified[index] = all_certs[i];
+                index++;
+            }
+        }
+
+        return verified;
     }
 
     // Function to retrieve a certificate's details
