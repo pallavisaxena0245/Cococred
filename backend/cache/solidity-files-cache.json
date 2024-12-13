@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/pallavi.saxena/Desktop/Cococred/backend/contracts/CertificateRegister.sol": {
-      "lastModificationDate": 1733947079066,
-      "contentHash": "9650bdc7f7ea63cdea8844aec8bf04b5",
+      "lastModificationDate": 1734601904197,
+      "contentHash": "49fce69ecd8d79189482bb1d3471690b",
       "sourceName": "contracts/CertificateRegister.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -35,42 +35,6 @@
       ],
       "artifacts": [
         "CertificateRegister"
-      ]
-    },
-    "/Users/pallavi.saxena/Desktop/Cococred/backend/contracts/Lock.sol": {
-      "lastModificationDate": 1733948621566,
-      "contentHash": "7eee587c347fe6b1de50c96688cb9477",
-      "sourceName": "contracts/Lock.sol",
-      "solcConfig": {
-        "version": "0.8.28",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.28"
-      ],
-      "artifacts": [
-        "Lock"
       ]
     }
   }
