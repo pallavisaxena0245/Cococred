@@ -8,10 +8,6 @@ async function main() {
     
     console.log("CertificateRegister deployed to:", certificateRegister.target);
 
-    // Now you can interact with the deployed contract
-    // For example, calling getCertificate to retrieve details about a particular certificate:
-    // const certificate = await certificateRegister.getCertificate(someAddress);
-    // console.log("Certificate details:", certificate);
 }
 
 // Error handling
