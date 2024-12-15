@@ -9,6 +9,7 @@ import Profile from './components/Profile.js';
 import Attribute from './components/Attribute.js';
 import CertificateService from './contexts/CertificateService.js';
 import Certificate from './components/Certificate.js';
+import Authority from './components/Authority.js';
 function App() {
   return (
    <CertificateService>
@@ -20,6 +21,7 @@ function App() {
       <Route path="/attribute_cert" element={<Attribute/>} />
       <Route path="/user_verify" element={<Profile/>} />
       <Route path="/" element={<Navigate to="/login" replace/>}/>
+      <Route path="/auth" element={<Authority />} />
       <Route path="/login" element={<Login user_choice='user'/>} />
       <Route path="/home" element={<Landing />} />
       <Route path="/user_login" element={<Login user_choice='user'/>} />
