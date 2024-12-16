@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
-import CertificateContractABI from "../abi/CertificateRegister.json";
+import CertificateContractABI from "../abis/CertificateRegister.json";
 
-const contractAddress = "<Your_Contract_Address>";
-
+const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 const Authority = () => {
   const [certificates, setCertificates] = useState([]);
   const [isVerified, setIsVerified] = useState(false);
@@ -15,7 +14,7 @@ const Authority = () => {
       const contract = new ethers.Contract(contractAddress, CertificateContractABI.abi, signer);
 
       const certs = verified
-        ? await contract.getVerifiedCertificates()
+        ? await contract.getUnverifiedCertificates()
         : await contract.getUnverifiedCertificates();
 
       setCertificates(certs);

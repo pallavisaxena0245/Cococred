@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/pallavi.saxena/Desktop/Cococred/backend/contracts/CertificateRegister.sol": {
-      "lastModificationDate": 1734084840006,
-      "contentHash": "49fce69ecd8d79189482bb1d3471690b",
+      "lastModificationDate": 1734247832205,
+      "contentHash": "c9d6ff8e596a21048aaa4414ad93a2aa",
       "sourceName": "contracts/CertificateRegister.sol",
       "solcConfig": {
         "version": "0.8.28",

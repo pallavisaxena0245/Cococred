@@ -1,15 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { VerifiedContext, HashContext, CommitmentContext } from '../contexts/CertificateService';
 import axios from 'axios';
+import abi from '../abis/CertificateRegister.json';
 import { ethers } from 'ethers';
 import './styles/Profile.css';
 
 const Profile = () => {
-
    const { verified, setVerified } = useContext(VerifiedContext);
-  const { hash, setHash } = useContext(HashContext);
-  const { commitment, setCommitment } = useContext(CommitmentContext);
-
+   const { hash, setHash } = useContext(HashContext);
+   const { commitment, setCommitment } = useContext(CommitmentContext);
 
    const [formData, setFormData] = useState({ name: '', age: '', gender: '', address: '', govt_id: '' });
    const [file, setFile] = useState(null);
@@ -21,11 +20,26 @@ const Profile = () => {
    };
 
    const handleFileChange = (e) => {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > 2 * 1024 * 1024) { // 2MB size limit
+         alert("File size exceeds 2MB.");
+         return;
+      }
+      if (!["image/png", "image/jpeg", "application/pdf"].includes(selectedFile.type)) {
+         alert("Invalid file type. Please upload a PNG, JPEG, or PDF.");
+         return;
+      }
+      setFile(selectedFile);
    };
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+
+      if (formData.age <= 0) {
+         alert("Please enter a valid age.");
+         return;
+      }
+
       const data = new FormData();
       data.append('name', formData.name);
       data.append('age', formData.age);
@@ -35,7 +49,7 @@ const Profile = () => {
       data.append('document', file);
 
       try {
-         const response = await axios.post('http://localhost:5000/verify_profile', data);
+         const response = await axios.post(`${process.env.REACT_APP_API_URL}/verify_profile`, data);
          alert('Commitment generated successfully!');
 
          const { commitment, hash } = response.data;
@@ -43,24 +57,21 @@ const Profile = () => {
          setHash(hash);
          setVerified(true);
 
-         if (window.ethereum) {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            await provider.send('eth_requestAccounts', []); // Request access to Metamask
-
-            const signer = provider.getSigner();
-            const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Replace with deployed contract address
-            const abi = [
-              
-             ]; // Replace with your contract's ABI
-
-            const contract = new ethers.Contract(contractAddress, abi, signer);
-            const tx = await contract.registerCertificate(commitment, hash, await signer.getAddress());
-            await tx.wait();
-
-            alert('Certificate successfully registered on the blockchain!');
-         } else {
-            alert('Please connect to Metamask to continue.');
+         if (!window.ethereum) {
+            alert('Metamask is not installed. Please install Metamask to proceed.');
+            return;
          }
+
+         const provider = new ethers.providers.Web3Provider(window.ethereum);
+         await provider.send('eth_requestAccounts', []);
+         const signer = provider.getSigner();
+         const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+         const contract = new ethers.Contract(contractAddress, abi.abi, signer);
+
+         const tx = await contract.registerCertificate(commitment, hash, await signer.getAddress());
+         await tx.wait();
+
+         alert('Certificate successfully registered on the blockchain!');
 
          setCertificate({
             name: formData.name,

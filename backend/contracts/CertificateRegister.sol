@@ -94,6 +94,7 @@ contract CertificateRegister {
         for (uint i = 0; i < all_certs.length; i++) {
             if (!all_certs[i].verified) {
                 unverified[index] = all_certs[i];
+
                 index++;
             }
         }
