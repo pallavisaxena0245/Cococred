@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { VerifiedContext, HashContext, CommitmentContext } from '../contexts/CertificateService';
 import axios from 'axios';
-// import abi from '../abis/CertificateRegister.json';
+import CertificateContractABI from "../abis/CertificateRegister.json";
+
 import { ethers } from 'ethers';
 import './styles/Profile.css';
 
@@ -21,14 +22,6 @@ const Profile = () => {
 
    const handleFileChange = (e) => {
       const selectedFile = e.target.files[0];
-      if (selectedFile.size > 2 * 1024 * 1024) { // 2MB size limit
-         alert("File size exceeds 2MB.");
-         return;
-      }
-      if (!["image/png", "image/jpeg", "application/pdf"].includes(selectedFile.type)) {
-         alert("Invalid file type. Please upload a PNG, JPEG, or PDF.");
-         return;
-      }
       setFile(selectedFile);
    };
 
@@ -49,7 +42,7 @@ const Profile = () => {
       data.append('document', file);
 
       try {
-         const response = await axios.post(`${process.env.REACT_APP_API_URL}/verify_profile`, data);
+         const response = await axios.post(`http://localhost:5000/verify_profile`, data);
          alert('Commitment generated successfully!');
 
          const { commitment, hash } = response.data;
@@ -67,275 +60,16 @@ const Profile = () => {
          const signer = provider.getSigner();
          const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 
-         const abi = [
-         {
-           "inputs": [
-             {
-               "internalType": "address[]",
-               "name": "_govtOfficials",
-               "type": "address[]"
-             }
-           ],
-           "stateMutability": "nonpayable",
-           "type": "constructor"
-         },
-         {
-           "inputs": [
-             {
-               "internalType": "uint256",
-               "name": "",
-               "type": "uint256"
-             }
-           ],
-           "name": "all_certs",
-           "outputs": [
-             {
-               "internalType": "string",
-               "name": "commitment",
-               "type": "string"
-             },
-             {
-               "internalType": "string",
-               "name": "hash",
-               "type": "string"
-             },
-             {
-               "internalType": "bool",
-               "name": "verified",
-               "type": "bool"
-             },
-             {
-               "internalType": "address",
-               "name": "requester",
-               "type": "address"
-             },
-             {
-               "internalType": "address",
-               "name": "verifier",
-               "type": "address"
-             }
-           ],
-           "stateMutability": "view",
-           "type": "function"
-         },
-         {
-           "inputs": [
-             {
-               "internalType": "address",
-               "name": "",
-               "type": "address"
-             }
-           ],
-           "name": "certificates",
-           "outputs": [
-             {
-               "internalType": "string",
-               "name": "commitment",
-               "type": "string"
-             },
-             {
-               "internalType": "string",
-               "name": "hash",
-               "type": "string"
-             },
-             {
-               "internalType": "bool",
-               "name": "verified",
-               "type": "bool"
-             },
-             {
-               "internalType": "address",
-               "name": "requester",
-               "type": "address"
-             },
-             {
-               "internalType": "address",
-               "name": "verifier",
-               "type": "address"
-             }
-           ],
-           "stateMutability": "view",
-           "type": "function"
-         },
-         {
-           "inputs": [
-             {
-               "internalType": "address",
-               "name": "_user",
-               "type": "address"
-             }
-           ],
-           "name": "getCertificate",
-           "outputs": [
-             {
-               "internalType": "string",
-               "name": "commitment",
-               "type": "string"
-             },
-             {
-               "internalType": "string",
-               "name": "hash",
-               "type": "string"
-             },
-             {
-               "internalType": "bool",
-               "name": "verified",
-               "type": "bool"
-             },
-             {
-               "internalType": "address",
-               "name": "requester",
-               "type": "address"
-             },
-             {
-               "internalType": "address",
-               "name": "verifier",
-               "type": "address"
-             }
-           ],
-           "stateMutability": "view",
-           "type": "function"
-         },
-         {
-           "inputs": [],
-           "name": "getUnverifiedCertificates",
-           "outputs": [
-             {
-               "components": [
-                 {
-                   "internalType": "string",
-                   "name": "commitment",
-                   "type": "string"
-                 },
-                 {
-                   "internalType": "string",
-                   "name": "hash",
-                   "type": "string"
-                 },
-                 {
-                   "internalType": "bool",
-                   "name": "verified",
-                   "type": "bool"
-                 },
-                 {
-                   "internalType": "address",
-                   "name": "requester",
-                   "type": "address"
-                 },
-                 {
-                   "internalType": "address",
-                   "name": "verifier",
-                   "type": "address"
-                 }
-               ],
-               "internalType": "struct CertificateRegister.Certificate[]",
-               "name": "",
-               "type": "tuple[]"
-             }
-           ],
-           "stateMutability": "view",
-           "type": "function"
-         },
-         {
-           "inputs": [],
-           "name": "getVerifiedCertificates",
-           "outputs": [
-             {
-               "components": [
-                 {
-                   "internalType": "string",
-                   "name": "commitment",
-                   "type": "string"
-                 },
-                 {
-                   "internalType": "string",
-                   "name": "hash",
-                   "type": "string"
-                 },
-                 {
-                   "internalType": "bool",
-                   "name": "verified",
-                   "type": "bool"
-                 },
-                 {
-                   "internalType": "address",
-                   "name": "requester",
-                   "type": "address"
-                 },
-                 {
-                   "internalType": "address",
-                   "name": "verifier",
-                   "type": "address"
-                 }
-               ],
-               "internalType": "struct CertificateRegister.Certificate[]",
-               "name": "",
-               "type": "tuple[]"
-             }
-           ],
-           "stateMutability": "view",
-           "type": "function"
-         },
-         {
-           "inputs": [
-             {
-               "internalType": "uint256",
-               "name": "",
-               "type": "uint256"
-             }
-           ],
-           "name": "govtOfficials",
-           "outputs": [
-             {
-               "internalType": "address",
-               "name": "",
-               "type": "address"
-             }
-           ],
-           "stateMutability": "view",
-           "type": "function"
-         },
-         {
-           "inputs": [
-             {
-               "internalType": "string",
-               "name": "_commitment",
-               "type": "string"
-             },
-             {
-               "internalType": "string",
-               "name": "_hash",
-               "type": "string"
-             },
-             {
-               "internalType": "address",
-               "name": "_requester",
-               "type": "address"
-             }
-           ],
-           "name": "registerCertificate",
-           "outputs": [],
-           "stateMutability": "nonpayable",
-           "type": "function"
-         },
-         {
-           "inputs": [
-             {
-               "internalType": "address",
-               "name": "_user",
-               "type": "address"
-             }
-           ],
-           "name": "validateCertificate",
-           "outputs": [],
-           "stateMutability": "nonpayable",
-           "type": "function"
-         }
-       ]
-         const contract = new ethers.Contract(contractAddress, abi, signer);
+         const contract = new ethers.Contract(contractAddress, CertificateContractABI.abi, signer);
 
-         const tx = await contract.registerCertificate(commitment, hash, await signer.getAddress());
-         await tx.wait();
+         try {
+            const tx = await contract.registerCertificate(commitment, hash, await signer.getAddress());
+            await tx.wait();
+         } catch (error) {
+            console.error("Error in transaction:", error);
+         }
+         
+         
 
          alert('Certificate successfully registered on the blockchain!');
 

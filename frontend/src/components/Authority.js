@@ -15,7 +15,7 @@ const Authority = () => {
 
       const certs = verified
         ? await contract.getUnverifiedCertificates()
-        : await contract.getUnverifiedCertificates();
+        : await contract.getVerifiedCertificates();
 
       setCertificates(certs);
       setIsVerified(verified);
@@ -24,30 +24,14 @@ const Authority = () => {
     }
   };
 
-  const handleCertificateAction = async (requester, action) => {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, CertificateContractABI.abi, signer);
-
-      if (action === "approve") {
-        await contract.validateCertificate(requester);
-      } else {
-        console.log("Rejection logic here if needed.");
-      }
-
-      alert(`Certificate ${action}d successfully!`);
-    } catch (error) {
-      console.error(`Error ${action}ing certificate:`, error);
-    }
-  };
+  
 
   return (
     <div>
       <h1>Authority Page</h1>
       <div>
-        <button onClick={() => fetchCertificates(true)}>Show Verified Certificates</button>
         <button onClick={() => fetchCertificates(false)}>Show Unverified Certificates</button>
+        <button onClick={() => fetchCertificates(true)}>Show Verified Certificates</button>
       </div>
       <div>
         {certificates.length > 0 ? (
@@ -74,12 +58,12 @@ const Authority = () => {
                     {!cert.verified && (
                       <>
                         <button
-                          onClick={() => handleCertificateAction(cert.requester, "approve")}
+                          onClick={() => alert('Approved')}
                         >
                           Approve
                         </button>
                         <button
-                          onClick={() => handleCertificateAction(cert.requester, "reject")}
+                          onClick={() =>alert('Rejected')}
                         >
                           Reject
                         </button>
